@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Berita | Mahasiswa Unpad Raih Medali Emas Robotik - Ketik Unpad</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Shared Styles from index.html */
+        .article-card:hover .article-image {
+            transform: scale(1.03);
+            transition: transform 0.3s ease-in-out;
+        }
+        .hero-article:hover .hero-image {
+            transform: scale(1.02);
+            transition: transform 0.4s ease-in-out;
+        }
+        .popular-item:not(:last-child) {
+            border-bottom: 1px dotted #cbd5e0; /* light gray dotted border */
+            padding-bottom: 0.75rem; /* pb-3 */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+
+        /* Fixed Header Styles */
+        #main-header,
+        #trending-bar {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        #main-header {
+            top: 0;
+            padding-bottom: 0;
+        }
+        #trending-bar {
+            top: auto; /* Adjusted by JS */
+            transition: top 0.3s ease-in-out;
+        }
+        body {
+            padding-top: 7.5rem; /* Adjusted by JS load/resize */
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Sticky sidebar elements (using Tailwind's sticky utility) */
+        .sidebar-sticky-element {
+            /* top will be calculated by JS */
+        }
+
+        /* Specific styles for detail page content */
+        .article-content p {
+            margin-bottom: 1rem; /* Spasi antar paragraf */
+            line-height: 1.75; /* Line height lebih nyaman dibaca */
+            font-size: 1.05rem;
+            color: #374151; /* gray-700 */
+        }
+        .article-content h2, .article-content h3 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            color: #1f2937; /* gray-900 */
+        }
+        .article-content h2 { font-size: 1.875rem; } /* text-3xl */
+        .article-content h3 { font-size: 1.5rem; } /* text-2xl */
+
+        /* Optional: Image styling within content */
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem; /* rounded-lg */
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-blue-50 font-sans leading-normal tracking-normal">
+
+    <div class="bg-gray-800 text-gray-200 text-xs py-1 px-4 hidden sm:block fixed top-0 left-0 w-full z-[1001]">
+        <div class="container mx-auto flex justify-between items-center">
+            <span>Jakarta, 20 Juni 2025 | 12:12 WIB</span>
+            <span><i class="fas fa-cloud-sun mr-1"></i> 26°C | <i class="fas fa-smog mr-1"></i> AQI: 152 (Tidak Sehat)</span>
+        </div>
+    </div>
+
+    <header id="main-header" class="bg-white shadow-md py-3">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <a href="" class="text-3xl font-extrabold text-blue-700"><img src="https://ketikunpad.id/themes/ketik/images/ketik-logo.png" alt=""></a>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-6">
+                    <li><a href="index.html" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Beranda</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Nasional</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Internasional</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Kampus</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Gaya Hidup</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Opini</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Kontak</a></li>
+                </ul>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-blue-600 focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white mt-2 border-t border-gray-200">
+            <ul class="flex flex-col space-y-2 p-4">
+                <li><a href="index.html" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Beranda</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Nasional</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Internasional</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Kampus</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Gaya Hidup</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Opini</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Kontak</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div id="trending-bar" class="bg-gray-100 py-2 px-4 shadow-sm border-b border-gray-200">
+        <div class="container mx-auto flex items-center overflow-x-auto whitespace-nowrap scrollbar-hide">
+            <span class="text-blue-600 font-bold text-sm mr-4 flex-shrink-0">TRENDING:</span>
+            <a href="#" class="text-gray-700 hover:text-blue-600 text-sm mr-4 flex-shrink-0">Jalur Mandiri Unpad</a>
+            <span class="text-gray-400 text-sm mx-2">•</span>
+            <a href="#" class="text-gray-700 hover:text-blue-600 text-sm mr-4 flex-shrink-0">Daftar Beasiswa Mahasiswa</a>
+            <span class="text-gray-400 text-sm mx-2">•</span>
+            <a href="#" class="text-gray-700 hover:text-blue-600 text-sm mr-4 flex-shrink-0">Program Pertukaran Pelajar</a>
+            <span class="text-gray-400 text-sm mx-2">•</span>
+            <a href="#" class="text-gray-700 hover:text-blue-600 text-sm mr-4 flex-shrink-0">Inovasi Mahasiswa Terbaru</a>
+            <span class="text-gray-400 text-sm mx-2">•</span>
+            <a href="#" class="text-gray-700 hover:text-blue-600 text-sm mr-4 flex-shrink-0">Peringatan Wisuda Akbar</a>
+        </div>
+    </div>
+
+
+    <main class="container mx-auto my-8 p-4 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <aside class="hidden lg:block lg:col-span-1">
+            <div class="sticky sidebar-sticky-element space-y-8">
+                <div class="bg-yellow-100 rounded-lg shadow-sm p-4 text-center border-2 border-dashed border-yellow-300">
+                    <h3 class="text-sm font-semibold text-yellow-800 mb-2">Space Iklan Vertikal</h3>
+                    <a href="#" target="_blank">
+                        <img src="iklan.gif" alt="Iklan Skyscraper 1" class="w-full h-auto mx-auto mb-2 rounded-md">
+                    </a>
+                    <p class="text-yellow-700 text-xs">Produk Kampus Unggulan!</p>
+                </div>
+                <div class="bg-blue-100 rounded-lg shadow-sm p-4 text-center border-2 border-dashed border-blue-300">
+                    <h3 class="text-sm font-semibold text-blue-800 mb-2">Space Iklan Vertikal</h3>
+                    <a href="#" target="_blank">
+                        <img src="iklan.gif" alt="Iklan Skyscraper 2" class="w-full h-auto mx-auto mb-2 rounded-md">
+                    </a>
+                    <p class="text-blue-700 text-xs">Kesempatan Karir Mahasiswa!</p>
+                </div>
+            </div>
+        </aside>
+
+        <section class="lg:col-span-2 bg-white rounded-lg shadow-md p-6 border border-gray-200">
+            <nav class="text-sm text-gray-500 mb-4">
+                <ol class="list-none p-0 inline-flex">
+                    <li class="flex items-center">
+                        <a href="index.html" class="hover:underline text-blue-600">Beranda</a>
+                        <span class="mx-2">/</span>
+                    </li>
+                    <li class="flex items-center">
+                        <a href="#" class="hover:underline text-blue-600">Kampus</a>
+                        <span class="mx-2">/</span>
+                    </li>
+                    <li class="text-gray-700 font-semibold">Mahasiswa Unpad Raih Medali Emas Robotik</li>
+                </ol>
+            </nav>
+
+            <h1 class="text-4xl font-extrabold text-gray-900 leading-tight mb-4">Mahasiswa Unpad Raih Medali Emas di Ajang Kompetisi Internasional Robotik</h1>
+
+            <p class="text-gray-600 text-sm mb-6 border-b pb-4 border-gray-200">
+                Oleh <span class="font-semibold text-blue-600">Tim Redaksi Ketik Unpad</span> | 20 Juni 2025, 10:00 WIB
+            </p>
+
+            <figure class="mb-6">
+                <img src="https://www.unpad.ac.id/wp-content/uploads/2023/06/Inovasi-MIPA-2.jpg" alt="Tim Robotik Unpad Juara Internasional" class="w-full h-auto rounded-lg shadow-lg">
+                <figcaption class="text-gray-500 text-sm mt-2 text-center">Tim robotik Universitas Padjadjaran berpose dengan medali emas setelah memenangkan kompetisi di Seoul.</figcaption>
+            </figure>
+
+            <div class="article-content text-gray-700">
+                <p><strong>BANDUNG, Ketik Unpad</strong> – Tim Robotik Universitas Padjadjaran (Unpad) kembali mengukir prestasi gemilang di kancah internasional. Dalam ajang "International Robotics Challenge 2025" yang diselenggarakan di Seoul, Korea Selatan, tim perwakilan Unpad berhasil meraih medali emas kategori Inovasi Desain Robotika.</p>
+
+                <p>Kompetisi yang diikuti oleh puluhan universitas terkemuka dari berbagai negara ini menjadi saksi bisu keunggulan inovasi yang dikembangkan oleh mahasiswa Unpad. Robot yang mereka ciptakan mampu melakukan serangkaian tugas kompleks dengan presisi tinggi, mengintegrasikan kecerdasan buatan untuk optimasi jalur dan pengambilan keputusan.</p>
+
+                <p>Ketua tim, Ahmad Fauzi, mahasiswa Fakultas Teknik Elektro angkatan 2022, mengungkapkan rasa syukurnya. "Ini adalah hasil kerja keras tim selama berbulan-bulan, didukung penuh oleh dosen pembimbing dan fasilitas kampus. Kami bangga bisa membawa pulang medali emas ini untuk Unpad dan Indonesia," ujarnya dengan mata berbinar.</p>
+
+                <h3>Proses Pengembangan dan Tantangan</h3>
+                <p>Pengembangan robot ini dimulai sejak awal tahun, melibatkan riset mendalam, perancangan prototipe, hingga pengujian berulang kali. Tantangan terbesar adalah memastikan robot dapat beradaptasi dengan berbagai skenario yang disimulasikan dalam kompetisi, yang menuntut fleksibilitas dan algoritma yang cerdas.</p>
+                <img src="https://www.unpad.ac.id/wp-content/uploads/2023/06/Inovasi-MIPA-4.jpg" alt="Proses Pengembangan Robot" class="w-full h-64 object-cover">
+                <figcaption class="text-gray-500 text-sm mt-2 text-center">Salah satu tahapan perakitan robot di laboratorium robotika Unpad.</figcaption>
+
+                <p>Dr. Ir. Budi Santoso, M.Eng., selaku dosen pembimbing, menambahkan bahwa capaian ini menunjukkan potensi besar mahasiswa Unpad di bidang robotika dan kecerdasan buatan. "Kami akan terus mendorong mahasiswa untuk berinovasi dan berkontribusi pada pengembangan teknologi yang relevan dengan kebutuhan masa depan," kata Dr. Budi.</p>
+
+                <p>Pihak rektorat Unpad juga menyampaikan apresiasi setinggi-tingginya atas prestasi yang diraih. Rektor Unpad, Prof. Dr. Rina Fitriani, M.Sc., dalam sambutannya menyatakan bahwa keberhasilan ini menjadi inspirasi bagi seluruh civitas academica untuk terus berprestasi dan membawa nama baik Unpad di kancah global.</p>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/Xxr44GZotNs?si=6zD5W5MnVyrgFW4r" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <p>Prestasi ini tidak hanya membanggakan Unpad, tetapi juga membuktikan bahwa talenta muda Indonesia mampu bersaing di tingkat internasional dan menghasilkan inovasi yang impactful. Diharapkan, keberhasilan ini dapat memicu lebih banyak lagi inovasi dan prestasi dari generasi penerus bangsa.</p>
+            </div>
+
+            <div class="flex items-center space-x-4 mt-8 pt-4 border-t border-gray-200">
+                <span class="text-gray-700 font-semibold">Bagikan:</span>
+                <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-facebook-square text-2xl"></i></a>
+                <a href="#" class="text-blue-400 hover:text-blue-600"><i class="fab fa-twitter-square text-2xl"></i></a>
+                <a href="#" class="text-green-500 hover:text-green-700"><i class="fab fa-whatsapp-square text-2xl"></i></a>
+                <a href="#" class="text-red-600 hover:text-red-800"><i class="fas fa-envelope-square text-2xl"></i></a>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Komentar Pembaca (3)</h3>
+                <div class="bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200">
+                    <p class="font-semibold text-gray-800">Budi Setiawan</p>
+                    <p class="text-gray-600 text-sm mb-2">1 jam lalu</p>
+                    <p class="text-gray-700">Luar biasa sekali! Mahasiswa Unpad memang top. Semoga terus berinovasi!</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200">
+                    <p class="font-semibold text-gray-800">Ani Putri</p>
+                    <p class="text-gray-600 text-sm mb-2">3 jam lalu</p>
+                    <p class="text-gray-700">Bangga jadi bagian dari Unpad. Selamat untuk tim robotik!</p>
+                </div>
+
+                <div class="mt-6">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3">Tinggalkan Komentar</h4>
+                    <form>
+                        <div class="mb-4">
+                            <label for="nama" class="block text-gray-700 text-sm font-bold mb-2">Nama Anda:</label>
+                            <input type="text" id="nama" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500" placeholder="Nama Lengkap">
+                        </div>
+                        <div class="mb-4">
+                            <label for="komentar" class="block text-gray-700 text-sm font-bold mb-2">Komentar:</label>
+                            <textarea id="komentar" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500" placeholder="Tulis komentar Anda di sini..."></textarea>
+                        </div>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Kirim Komentar</button>
+                    </form>
+                </div>
+            </div>
+
+        </section>
+
+        <aside class="lg:col-span-1">
+            <div class="sticky sidebar-sticky-element space-y-8">
+                <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+                    <h3 class="text-xl font-bold text-blue-700 mb-4">TERPOPULER</h3>
+                    <ol class="list-decimal pl-5 space-y-3">
+                        <li class="popular-item">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base block">Mahasiswa Unpad Kembangkan Aplikasi Pendeteksi Sampah Plastik</a>
+                            <p class="text-gray-500 text-xs mt-1">Teknologi | 5 jam lalu</p>
+                        </li>
+                        <li class="popular-item">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base block">Tim Basket Putra Unpad Juara Liga Mahasiswa Nasional</a>
+                            <p class="text-gray-500 text-xs mt-1">Olahraga | 1 hari lalu</p>
+                        </li>
+                        <li class="popular-item">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base block">Guru Besar FEB Unpad Bahas Prospek Ekonomi Digital 2026</a>
+                            <p class="text-gray-500 text-xs mt-1">Ekonomi | 2 hari lalu</p>
+                        </li>
+                        <li class="popular-item">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base block">Pendaftaran Jalur Mandiri Unpad Gelombang Kedua Segera Dibuka</a>
+                            <p class="text-gray-500 text-xs mt-1">Kampus | 3 hari lalu</p>
+                        </li>
+                        <li class="popular-item">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base block">Kisah Inspiratif Alumni Unpad Sukses di Startup Unicorn</a>
+                            <p class="text-gray-500 text-xs mt-1">Gaya Hidup | 4 hari lalu</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="bg-yellow-100 rounded-lg shadow-md p-6 text-center border-2 border-dashed border-yellow-300">
+                    <h3 class="text-lg font-semibold text-yellow-800 mb-4">Ruang Iklan Pilihan</h3>
+                    <a href="#" target="_blank">
+                        <img src="iklan.gif" alt="Iklan Banner Besar" class="w-full mx-auto mb-4 rounded-md">
+                    </a>
+                    <p class="text-yellow-700 text-sm">Kesempatan terbatas! Segera daftar kursus ini.</p>
+                    <a href="#" class="mt-4 inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Dapatkan Sekarang!</a>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+                    <h3 class="text-xl font-bold text-blue-700 mb-4">KATEGORI BERITA</h3>
+                    <ul>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Olahraga</a>
+                        </li>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Ekonomi</a>
+                        </li>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Politik</a>
+                        </li>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Seni & Budaya</a>
+                        </li>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Sosial</a>
+                        </li>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Teknologi</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <footer class="bg-blue-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex flex-wrap justify-center md:justify-between items-center mb-6">
+                <div class="w-full md:w-auto mb-4 md:mb-0">
+                    <h4 class="text-xl font-bold mb-2">KETIK UNPAD</h4>
+                    <p class="text-blue-200 text-sm">Berita, Opini, dan Informasi Terkini seputar Unpad.</p>
+                </div>
+                <nav class="w-full md:w-auto">
+                    <ul class="flex flex-wrap justify-center space-x-4">
+                        <li><a href="#" class="text-blue-200 hover:text-white text-sm">Tentang Kami</a></li>
+                        <li><a href="#" class="text-blue-200 hover:text-white text-sm">Redaksi</a></li>
+                        <li><a href="#" class="text-blue-200 hover:text-white text-sm">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="text-blue-200 hover:text-white text-sm">Peta Situs</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="border-t border-blue-700 pt-6 text-sm text-blue-300">
+                &copy; 2025 Ketik Unpad. Hak Cipta Dilindungi Undang-Undang.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const mainHeader = document.getElementById('main-header');
+        const trendingBar = document.getElementById('trending-bar');
+        const topBar = document.querySelector('.top-bar');
+
+        let currentHeaderHeight = 0;
+        let currentTopBarHeight = 0;
+
+        // Function to calculate and update header heights
+        function updateHeaderHeights() {
+            currentHeaderHeight = mainHeader.offsetHeight;
+            currentTopBarHeight = topBar ? topBar.offsetHeight : 0;
+            const totalHeaderOffset = currentTopBarHeight + currentHeaderHeight;
+
+            // Set padding-top for body
+            document.body.style.paddingTop = `${totalHeaderOffset + trendingBar.offsetHeight}px`;
+
+            // Set top position for main header (relative to topBar if it exists)
+            mainHeader.style.top = `${currentTopBarHeight}px`;
+
+            // Set top position for trending bar (relative to mainHeader)
+            trendingBar.style.top = `${totalHeaderOffset}px`;
+
+            // Adjust sticky sidebar elements top position
+            const stickyElements = document.querySelectorAll('.sidebar-sticky-element');
+            stickyElements.forEach(el => {
+                el.style.top = `${totalHeaderOffset + trendingBar.offsetHeight + 16}px`;
+            });
+        }
+
+        // Call once on load and resize
+        window.addEventListener('load', updateHeaderHeights);
+        window.addEventListener('resize', updateHeaderHeights);
+
+        // Fungsionalitas untuk mobile menu
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Script untuk menyembunyikan scrollbar pada trending bar (webkit/firefox/IE)
+        const trendingBarElement = document.querySelector('.scrollbar-hide');
+        if (trendingBarElement) {
+            trendingBarElement.style.msOverflowStyle = 'none';
+            trendingBarElement.style.scrollbarWidth = 'none';
+        }
+    </script>
+</body>
+</html>
