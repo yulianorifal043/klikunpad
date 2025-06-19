@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ketik Unpad - Berita & Artikel Terkini</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* CSS kustom tambahan jika diperlukan */
+        .article-card:hover .article-image {
+            transform: scale(1.03);
+            transition: transform 0.3s ease-in-out;
+        }
+        .hero-article:hover .hero-image {
+            transform: scale(1.02);
+            transition: transform 0.4s ease-in-out;
+        }
+        /* Style untuk "Terpopuler" agar mirip Kompas */
+        .popular-item:not(:last-child) {
+            border-bottom: 1px dotted #cbd5e0; /* light gray dotted border */
+            padding-bottom: 0.75rem; /* pb-3 */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+
+        /* NEW: Header dan Trending Bar Selalu Fixed */
+        #main-header,
+        #trending-bar {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Pastikan di atas konten lain */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Shadow selalu ada */
+        }
+
+        #main-header {
+            top: 0;
+            padding-bottom: 0; /* Pastikan tidak ada padding di bawah untuk trending bar */
+        }
+
+        #trending-bar {
+            top: auto; /* Awalnya tidak fixed di sini */
+            /* Ini akan diatur ulang oleh JS */
+            transition: top 0.3s ease-in-out; /* Untuk transisi saat menempel */
+        }
+
+        /* Tambahan padding untuk body agar konten tidak tertutup oleh header dan trending bar */
+        body {
+            /* Sesuaikan dengan tinggi total header + trending bar */
+            /* Misal header 5rem + trending 2.5rem = 7.5rem */
+            padding-top: 7.5rem;
+        }
+
+        /* Optional: Scrollbar hide for trending bar on smaller screens */
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;  /* Chrome, Safari, Opera */
+        }
+
+        /* Sticky sidebar elements (using Tailwind's sticky utility) */
+        .sidebar-sticky-element {
+            top: calc(7.5rem + 1rem); /* Tinggi header + trending bar + sedikit jarak */
+        }
+    </style>
+</head>
+<body class="bg-blue-50 font-sans leading-normal tracking-normal">
+
+    <div class="bg-gray-800 text-gray-200 text-xs py-1 px-4 hidden sm:block fixed top-0 left-0 w-full z-[1001]">
+        <div class="container mx-auto flex justify-between items-center">
+            <span>Jakarta, 19 Juni 2025 | 17:35 WIB</span>
+            <span><i class="fas fa-cloud-sun mr-1"></i> 26°C | <i class="fas fa-smog mr-1"></i> AQI: 152 (Tidak Sehat)</span>
+        </div>
+    </div>
+
+    <header id="main-header" class="bg-white shadow-md py-3">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <a href="" class="text-3xl font-extrabold text-blue-700"><img src="https://ketikunpad.id/themes/ketik/images/ketik-logo.png" alt=""></a>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-6">
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Beranda</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Nasional</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Internasional</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Kampus</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Gaya Hidup</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Opini</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Kontak</a></li>
+                </ul>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-blue-600 focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white mt-2 border-t border-gray-200">
+            <ul class="flex flex-col space-y-2 p-4">
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Beranda</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Nasional</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Internasional</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Kampus</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Gaya Hidup</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Opini</a></li>
+                <li><a href="#" class="block text-gray-600 hover:text-blue-600 font-semibold py-2">Kontak</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div id="trending-bar" class="bg-gray-100 py-2 px-4 shadow-sm border-b border-gray-200">
+        <div class="container mx-auto flex items-center overflow-x-auto whitespace-nowrap scrollbar-hide">
+            <span class="text-blue-600 font-bold text-sm mr-4 flex-shrink-0">TRENDING:</span>
+            <a href="#" class="text-gray-700 hover:text-blue-600 text-sm mr-4 flex-shrink-0">Jalur Mandiri Unpad</a>
+            <span class="text-gray-400 text-sm mx-2">•</span>
+            <a href="#" class="text-gray-700 hover:text-blue-600 text-sm mr-4 flex-shrink-0">Daftar Beasiswa Mahasiswa</a>
+            <span class="text-gray-400 text-sm mx-2">•</span>
+            <a href="#" class="text-gray-700 hover:text-blue-600 text-sm mr-4 flex-shrink-0">Program Pertukaran Pelajar</a>
+            <span class="text-gray-400 text-sm mx-2">•</span>
+            <a href="#" class="text-gray-700 hover:text-blue-600 text-sm mr-4 flex-shrink-0">Inovasi Mahasiswa Terbaru</a>
+            <span class="text-gray-400 text-sm mx-2">•</span>
+            <a href="#" class="text-gray-700 hover:text-blue-600 text-sm mr-4 flex-shrink-0">Peringatan Wisuda Akbar</a>
+        </div>
+    </div>
+
+        <div>..</div>
+                <div class="bg-yellow-90 rounded-lg text-center border-2 border-dashed border-yellow-0">
+                    
+                    <a href="#" target="_blank">
+                        <img src="iklan2.jpg" alt="Iklan Skyscraper 1" class="w-full h-auto mx-auto mb-2 rounded-md">
+                    </a>
+                    <!-- <p class="text-yellow-700 text-xs">Produk Kampus Unggulan!</p> -->
+                </div>
+
+
+    <main class="container mx-auto my-8 p-4 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <aside class="hidden lg:block lg:col-span-1">
+            <div class="sticky sidebar-sticky-element space-y-8">
+                <div class="bg-yellow-100 rounded-lg shadow-sm p-4 text-center border-2 border-dashed border-yellow-300">
+                    <h3 class="text-sm font-semibold text-yellow-800 mb-2">Space Iklan Vertikal</h3>
+                    <a href="#" target="_blank">
+                        <img src="iklan.gif" alt="Iklan Skyscraper 1" class="w-full h-auto mx-auto mb-2 rounded-md">
+                    </a>
+                    <!-- <p class="text-yellow-700 text-xs">Produk Kampus Unggulan!</p> -->
+                </div>
+                <div class="bg-blue-100 rounded-lg shadow-sm p-4 text-center border-2 border-dashed border-blue-300">
+                    <h3 class="text-sm font-semibold text-blue-800 mb-2">Space Iklan Vertikal</h3>
+                    <a href="#" target="_blank">
+                        <img src="iklan.gif" alt="Iklan Skyscraper 2" class="w-full h-auto mx-auto mb-2 rounded-md">
+                    </a>
+                    <!-- <p class="text-blue-700 text-xs">Kesempatan Karir Mahasiswa!</p> -->
+                </div>
+            </div>
+        </aside>
+
+        <section class="lg:col-span-2">
+            <h2 class="text-3xl font-bold text-blue-700 mb-6">HEADLINE</h2>
+
+            <article class="bg-white rounded-lg shadow-md overflow-hidden mb-8 hero-article border border-gray-200">
+                <img src="https://ksp.go.id/wp-content/uploads/2025/02/prabowo-pertumbuhan.jpg" alt="Mahasiswa Unpad Berprestasi Internasional" class="w-full h-96 object-cover hero-image">
+                <div class="p-6">
+                    <span class="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full mb-2 inline-block">KAMPUS</span>
+                    <h3 class="text-3xl font-bold text-gray-800 mb-3 leading-tight">Prabowo Batalkan 5 Kebijakan Krusial, Mulai Gas LPJ 3 Kg Hingga Pengembalian 4 Pulau ke Aceh</h3>
+                    <p class="text-gray-600 text-sm mb-4">Oleh <span class="font-semibold text-blue-600">Tim Redaksi Ketik Unpad</span> | 19 Juni 2025</p>
+                    <p class="text-gray-700 leading-relaxed mb-4">KABAR GARUT – Sejak dilantik pada 20 Oktober lalu, Presiden Prabowo Subianto mulai menunjukkan arah kebijakan yang berbeda signifikan dari pendahulunya,...</p>
+                    <a href="#" class="text-blue-600 hover:underline font-semibold text-lg">Baca Berita Selengkapnya &rarr;</a>
+                </div>
+            </article>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+                <article class="bg-white rounded-lg shadow-sm overflow-hidden article-card border border-gray-200">
+                    <img src="https://www.unpad.ac.id/wp-content/uploads/2022/06/kunjungan-SA-UNS-4-1.jpg" alt="Rapat Senat Unpad" class="w-full h-48 object-cover article-image">
+                    <div class="p-4">
+                        <span class="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full mb-1 inline-block">POLITIK KAMPUS</span>
+                        <h4 class="text-lg font-bold text-gray-800 mb-1 leading-tight">Rapat Senat Akademik Bahas Kurikulum Baru Berbasis Digital</h4>
+                        <p class="text-gray-600 text-xs mb-2">Oleh <span class="font-semibold text-blue-600">Jurnalis Kampus</span> | 18 Juni 2025</p>
+                        <p class="text-gray-700 text-sm leading-relaxed">Senat Akademik Unpad mengadakan rapat penting untuk membahas implementasi kurikulum terbaru yang akan diterapkan tahun depan...</p>
+                        <a href="#" class="text-blue-600 hover:underline text-sm font-semibold mt-2 block">Baca Selengkapnya &rarr;</a>
+                    </div>
+                </article>
+                <article class="bg-white rounded-lg shadow-sm overflow-hidden article-card border border-gray-200">
+                    <img src="data:image/jpeg;base64,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" alt="Inovasi Teknologi Mahasiswa" class="w-full h-48 object-cover article-image">
+                    <div class="p-4">
+                        <span class="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full mb-1 inline-block">TEKNOLOGI</span>
+                        <h4 class="text-lg font-bold text-gray-800 mb-1 leading-tight">Inovasi Robotik Mahasiswa FMIPA Raih Penghargaan Bergengsi</h4>
+                        <p class="text-gray-600 text-xs mb-2">Oleh <span class="font-semibold text-blue-600">Reporter Teknologi</span> | 17 Juni 2025</p>
+                        <p class="text-gray-700 text-sm leading-relaxed">Tim mahasiswa Fakultas Matematika dan Ilmu Pengetahuan Alam (FMIPA) Unpad berhasil mengembangkan robot inovatif...</p>
+                        <a href="#" class="text-blue-600 hover:underline text-sm font-semibold mt-2 block">Baca Selengkapnya &rarr;</a>
+                    </div>
+                </article>
+            </div>
+
+            <h2 class="text-3xl font-bold text-blue-700 mt-12 mb-6">BERITA LAINNYA</h2>
+
+            <article class="bg-white rounded-lg shadow-sm overflow-hidden mb-6 article-card flex flex-col sm:flex-row border border-gray-200">
+                <div class="sm:w-1/3 flex-shrink-0">
+                    <img src="https://www.unpad.ac.id/wp-content/uploads/2024/10/SA2.jpg" alt="Pengajaran Online" class="w-full h-48 sm:h-full object-cover article-image">
+                </div>
+                <div class="p-4 sm:p-6 flex-grow">
+                    <span class="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full mb-1 inline-block">AKADEMIK</span>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 leading-tight">Peningkatan Kualitas Pengajaran Hybrid di Unpad Setelah Pandemi</h3>
+                    <p class="text-gray-600 text-sm mb-3">Oleh <span class="font-semibold">Akademisi</span> | 16 Juni 2025</p>
+                    <p class="text-gray-700 leading-relaxed">Strategi terbaru Unpad untuk mengoptimalkan metode pengajaran hybrid demi pengalaman belajar yang lebih baik...</p>
+                    <a href="#" class="text-blue-600 hover:underline font-semibold">Baca Selengkapnya &rarr;</a>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-lg shadow-sm overflow-hidden mb-6 article-card flex flex-col sm:flex-row border border-gray-200">
+                <div class="sm:w-1/3 flex-shrink-0">
+                    <img src="https://assets-a1.kompasiana.com/items/album/2025/05/16/whatsapp-image-2025-05-16-at-22-05-42-ec582ed5-682754785c392b71ba3fa915.jpg?t=o&v=1200" alt="Ekonomi Digital" class="w-full h-48 sm:h-full object-cover article-image">
+                </div>
+                <div class="p-4 sm:p-6 flex-grow">
+                    <span class="text-xs font-semibold text-yellow-800 bg-yellow-100 px-2 py-1 rounded-full mb-1 inline-block">EKONOMI</span>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 leading-tight">Peran Mahasiswa dalam Mengembangkan Ekonomi Digital Lokal</h3>
+                    <p class="text-gray-600 text-sm mb-3">Oleh <span class="font-semibold">Mahasiswa FEB</span> | 15 Juni 2025</p>
+                    <p class="text-gray-700 leading-relaxed">Studi kasus tentang kontribusi mahasiswa Unpad dalam memperkuat ekosistem ekonomi digital di sekitar kampus...</p>
+                    <a href="#" class="text-blue-600 hover:underline font-semibold">Baca Selengkapnya &rarr;</a>
+                </div>
+            </article>
+
+            <div class="flex justify-center mt-8">
+                <a href="#" class="px-4 py-2 mx-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700">1</a>
+                <a href="#" class="px-4 py-2 mx-1 rounded-lg bg-white text-blue-600 border border-blue-600 hover:bg-blue-100">2</a>
+                <a href="#" class="px-4 py-2 mx-1 rounded-lg bg-white text-blue-600 border border-blue-600 hover:bg-blue-100">3</a>
+                <span class="px-4 py-2 mx-1 text-gray-600">...</span>
+                <a href="#" class="px-4 py-2 mx-1 rounded-lg bg-white text-blue-600 border border-blue-600 hover:bg-blue-100">Akhir</a>
+            </div>
+
+        </section>
+
+        <aside class="lg:col-span-1">
+            <div class="sticky sidebar-sticky-element space-y-8">
+                <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+                    <h3 class="text-xl font-bold text-blue-700 mb-4">TERPOPULER</h3>
+                    <ol class="list-decimal pl-5 space-y-3">
+                        <li class="popular-item">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base block">Mahasiswa Unpad Kembangkan Aplikasi Pendeteksi Sampah Plastik</a>
+                            <p class="text-gray-500 text-xs mt-1">Teknologi | 5 jam lalu</p>
+                        </li>
+                        <li class="popular-item">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base block">Tim Basket Putra Unpad Juara Liga Mahasiswa Nasional</a>
+                            <p class="text-gray-500 text-xs mt-1">Olahraga | 1 hari lalu</p>
+                        </li>
+                        <li class="popular-item">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base block">Guru Besar FEB Unpad Bahas Prospek Ekonomi Digital 2026</a>
+                            <p class="text-gray-500 text-xs mt-1">Ekonomi | 2 hari lalu</p>
+                        </li>
+                        <li class="popular-item">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base block">Pendaftaran Jalur Mandiri Unpad Gelombang Kedua Segera Dibuka</a>
+                            <p class="text-gray-500 text-xs mt-1">Kampus | 3 hari lalu</p>
+                        </li>
+                        <li class="popular-item">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base block">Kisah Inspiratif Alumni Unpad Sukses di Startup Unicorn</a>
+                            <p class="text-gray-500 text-xs mt-1">Gaya Hidup | 4 hari lalu</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="bg-yellow-100 rounded-lg shadow-md p-6 text-center border-2 border-dashed border-yellow-300">
+                    <h3 class="text-lg font-semibold text-yellow-800 mb-4">Ruang Iklan Pilihan</h3>
+                    <a href="#" target="_blank">
+                        <img src="iklan.gif" alt="Iklan Banner Besar" class="w-full mx-auto mb-4 rounded-md">
+                    </a>
+                    <p class="text-yellow-700 text-sm">Kesempatan terbatas! Segera daftar kursus ini.</p>
+                    <a href="#" class="mt-4 inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Dapatkan Sekarang!</a>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+                    <h3 class="text-xl font-bold text-blue-700 mb-4">KATEGORI BERITA</h3>
+                    <ul>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Olahraga</a>
+                        </li>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Ekonomi</a>
+                        </li>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Politik</a>
+                        </li>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Seni & Budaya</a>
+                        </li>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Sosial</a>
+                        </li>
+                        <li class="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+                            <a href="#" class="text-gray-700 hover:text-blue-600 font-semibold text-base">Teknologi</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <footer class="bg-blue-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex flex-wrap justify-center md:justify-between items-center mb-6">
+                <div class="w-full md:w-auto mb-4 md:mb-0">
+                    <h4 class="text-xl font-bold mb-2">KETIK UNPAD</h4>
+                    <p class="text-blue-200 text-sm">Berita, Opini, dan Informasi Terkini seputar Unpad.</p>
+                </div>
+                <nav class="w-full md:w-auto">
+                    <ul class="flex flex-wrap justify-center space-x-4">
+                        <li><a href="#" class="text-blue-200 hover:text-white text-sm">Tentang Kami</a></li>
+                        <li><a href="#" class="text-blue-200 hover:text-white text-sm">Redaksi</a></li>
+                        <li><a href="#" class="text-blue-200 hover:text-white text-sm">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="text-blue-200 hover:text-white text-sm">Peta Situs</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="border-t border-blue-700 pt-6 text-sm text-blue-300">
+                &copy; 2025 Ketik Unpad. Hak Cipta Dilindungi Undang-Undang.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const mainHeader = document.getElementById('main-header');
+        const trendingBar = document.getElementById('trending-bar');
+        const topBar = document.querySelector('.top-bar'); // Get the optional top bar
+
+        let currentHeaderHeight = 0;
+        let currentTopBarHeight = 0;
+
+        // Function to calculate and update header heights
+        function updateHeaderHeights() {
+            currentHeaderHeight = mainHeader.offsetHeight;
+            currentTopBarHeight = topBar ? topBar.offsetHeight : 0; // Get height if topBar exists
+            const totalHeaderOffset = currentTopBarHeight + currentHeaderHeight;
+
+            // Set padding-top for body
+            document.body.style.paddingTop = `${totalHeaderOffset + trendingBar.offsetHeight}px`;
+
+            // Set top position for main header (relative to topBar if it exists)
+            mainHeader.style.top = `${currentTopBarHeight}px`;
+
+            // Set top position for trending bar (relative to mainHeader)
+            trendingBar.style.top = `${totalHeaderOffset}px`;
+
+            // Adjust sticky sidebar elements top position
+            const stickyElements = document.querySelectorAll('.sidebar-sticky-element');
+            stickyElements.forEach(el => {
+                // Ensure sticky element starts below all fixed headers + a small gap
+                el.style.top = `${totalHeaderOffset + trendingBar.offsetHeight + 16}px`; // 16px for a little gap
+            });
+        }
+
+        // Call once on load and resize
+        window.addEventListener('load', updateHeaderHeights);
+        window.addEventListener('resize', updateHeaderHeights);
+
+        // Fungsionalitas untuk mobile menu
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Script untuk menyembunyikan scrollbar pada trending bar (webkit/firefox/IE)
+        const trendingBarElement = document.querySelector('.scrollbar-hide');
+        if (trendingBarElement) {
+            trendingBarElement.style.msOverflowStyle = 'none';
+            trendingBarElement.style.scrollbarWidth = 'none';
+        }
+    </script>
+</body>
+</html>
