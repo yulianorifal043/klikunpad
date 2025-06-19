@@ -80,6 +80,22 @@
             margin-bottom: 1.5rem;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         }
+
+        /* NEW: Responsive Video Embed Styles */
+        .video-responsive {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio (9 / 16 * 100) */
+            margin-bottom: 1.5rem; /* Memberi jarak bawah video */
+        }
+        .video-responsive iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.5rem; /* Untuk sudut melengkung pada video */
+        }
     </style>
 </head>
 <body class="bg-blue-50 font-sans leading-normal tracking-normal">
@@ -93,7 +109,9 @@
 
     <header id="main-header" class="bg-white shadow-md py-3">
         <div class="container mx-auto flex justify-between items-center px-4">
-            <a href="index.html" class="text-3xl font-extrabold text-blue-700"><img src="https://ketikunpad.id/themes/ketik/images/ketik-logo.png" alt=""></a>
+            <a href="index.html" class="text-3xl font-extrabold text-blue-700">
+                <img src="https://ketikunpad.id/themes/ketik/images/ketik-logo.png" alt="KETIK UNPAD Logo" class="h-10">
+            </a>
             <nav class="hidden md:block">
                 <ul class="flex space-x-6">
                     <li><a href="index.html" class="text-gray-600 hover:text-blue-600 font-semibold text-lg">Beranda</a></li>
@@ -200,7 +218,10 @@
                 <p>Dr. Ir. Budi Santoso, M.Eng., selaku dosen pembimbing, menambahkan bahwa capaian ini menunjukkan potensi besar mahasiswa Unpad di bidang robotika dan kecerdasan buatan. "Kami akan terus mendorong mahasiswa untuk berinovasi dan berkontribusi pada pengembangan teknologi yang relevan dengan kebutuhan masa depan," kata Dr. Budi.</p>
 
                 <p>Pihak rektorat Unpad juga menyampaikan apresiasi setinggi-tingginya atas prestasi yang diraih. Rektor Unpad, Prof. Dr. Rina Fitriani, M.Sc., dalam sambutannya menyatakan bahwa keberhasilan ini menjadi inspirasi bagi seluruh civitas academica untuk terus berprestasi dan membawa nama baik Unpad di kancah global.</p>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/Xxr44GZotNs?si=6zD5W5MnVyrgFW4r" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                <div class="video-responsive">
+                   <iframe width="560" height="315" src="https://www.youtube.com/embed/Xxr44GZotNs?si=GKxL26SnskPEFSs9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
                 <p>Prestasi ini tidak hanya membanggakan Unpad, tetapi juga membuktikan bahwa talenta muda Indonesia mampu bersaing di tingkat internasional dan menghasilkan inovasi yang impactful. Diharapkan, keberhasilan ini dapat memicu lebih banyak lagi inovasi dan prestasi dari generasi penerus bangsa.</p>
             </div>
 
@@ -241,6 +262,13 @@
                 </div>
             </div>
 
+            <div class="bg-yellow-50 rounded-lg shadow-md p-4 mt-8 text-center border-2 border-dashed border-yellow-300">
+                <h3 class="text-lg font-semibold text-yellow-800 mb-4">Iklan di Dalam Artikel</h3>
+                <a href="#" target="_blank">
+                    <img src="iklan.gif" alt="Iklan In-Article" class="w-full mx-auto mb-4 rounded-md h-32 object-contain">
+                </a>
+                <p class="text-yellow-700 text-sm">Promosi Menarik Khusus Pembaca Ketik Unpad!</p>
+            </div>
         </section>
 
         <aside class="lg:col-span-1">
